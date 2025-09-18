@@ -1,27 +1,29 @@
 # 🪟 Windows Log Monitor (Python + Tkinter)
 
-A responsive **Windows Log Monitor** designed for security auditing, troubleshooting, and forensic analysis.  
+A responsive **Windows Log Monitor** for security auditing, troubleshooting, and forensic analysis.
 It retrieves Windows event logs using Python, offers powerful date-based filtering, and provides a modern, scrollable UI for deep investigation of log events.
+Filter by multiple Event IDs using a simple input box!
 
 ---
 
 ## 🚀 Features
 
 - **Log Source Selection:** Application, Security, Setup, System, and ForwardedEvents  
-- **Date Range Filtering:** Filter logs by start and end date using a calendar popup  
+- **Date Range Filtering:** Filter logs by start and end date using a calendar popup
+- **Event ID Filtering:** Input multiple Event IDs (comma-separated) to narrow results (e.g., 4624,4634,4720)
 - **Event Details Table:** Tabular view with:
   - Record Number  
   - Event ID  
-  - Task Category (friendly names for Security log)  
+  - Task Category (mapped for secuity logs) 
   - Category Number  
   - Time  
   - Source  
   - Type (Error, Warning, Information, etc.)  
   - Computer Name  
-- **Event XML Popup:** Double-click a row or click “Show More (XML)” for full event XML details  
-- **Dynamic Display:** Responsive resizing + scrollbars for large datasets  
-- **Immediate Usage:** Fetches last 7 days of logs by default  
-- **Task Category Mapping:** Friendly labels for Security logs (e.g., Logon, Logoff, User Account Management)  
+- **Event XML Popup:** Double-click a row or click “Show More (XML)” for full event XML details.  
+- **Responsive Display** Scalable window and vertical scrollbars for browsing large datasets.
+- **Immediate Usage:** Fetches last 7 days of logs by default.
+- **Task Category Mapping:** Friendly labels for Security logs. (e.g., Logon, Logoff, User Account Management)  
 - 🔒 **Privacy:** Purely local — no data leaves your PC  
 
 ---
@@ -68,13 +70,16 @@ It retrieves Windows event logs using Python, offers powerful date-based filteri
 2. **Set Date Range**  
    Pick **start** and **end** dates (defaults: last 7 days).
 
-3. **Load Events**  
+3. **Load Events:**
+   Click Load Logs to retrieve and display the matching events.
+
+4. **Load Events**  
    Click **"Load Logs"** to query and populate results.
 
-4. **Browse Logs**  
+5. **Browse Logs**  
    Scroll through the results table with **sortable columns**.
 
-5. **Inspect Details**  
+6. **Event Details**  
    - Double-click a row, **or**  
    - Select a row → click **"Show More (XML)"**  
      
@@ -120,11 +125,4 @@ Contributions are welcome! You can help by:
 
 ## 📄 License
 
-MIT License — free for professional, academic, and DFIR use.  
-
----
-
-## 🙌 Credits
-
-- **pywin32** by Mark Hammond  
-- **tkcalendar** for date selection  
+MIT License — free for professional, academic, and DFIR use.
