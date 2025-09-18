@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox, Toplevel, scrolledtext
 from tkcalendar import DateEntry
 
+# -- Task Category Mapping for Security Logs --
 TASK_CATEGORY_MAP_SECURITY = {
     12288: "System Event",
     12544: "Logon",
@@ -53,17 +54,14 @@ def event_type_str(event_type):
     }
     return mapping.get(event_type, f"Unknown({event_type})")
 
-def fetch_events(logtype, start_date, end_date):
+def fetch_events(logtype, start_date, end_date, filter_eventids=None):
     server = 'localhost'
     hand = win32evtlog.OpenEventLog(server, logtype)
     flags = win32evtlog.EVENTLOG_BACKWARDS_READ | win32evtlog.EVENTLOG_SEQUENTIAL_READ
-
     start_dt = datetime.strptime(start_date, "%d/%m/%Y")
     end_dt = datetime.strptime(end_date, "%d/%m/%Y") + timedelta(days=1) - timedelta(seconds=1)
-
     event_rows = []
     event_xmls = []
-
     while True:
         events = win32evtlog.ReadEventLog(hand, flags, 0)
         if not events:
@@ -71,13 +69,16 @@ def fetch_events(logtype, start_date, end_date):
         for event in events:
             try:
                 event_time = event.TimeGenerated
-                if start_dt <= event_time <= end_dt:
+                event_id_match = True
+                if filter_eventids:
+                    event_id_match = event.EventID in filter_eventids
+                if start_dt <= event_time <= end_dt and event_id_match:
                     friendly_taskcat = resolve_task_category(event.EventCategory, logtype)
                     row = (
                         event.RecordNumber,
                         event.EventID,
-                        friendly_taskcat,              
-                        event.EventCategory,           
+                        friendly_taskcat,
+                        event.EventCategory,
                         event_time.strftime("%Y-%m-%d %H:%M:%S"),
                         event.SourceName,
                         event_type_str(event.EventType),
@@ -110,8 +111,18 @@ def load_events(*args):
     selected_log = log_var.get()
     start_date = start_cal.get()
     end_date = end_cal.get()
+    # Parse Event IDs from entry, allow comma separation, strip whitespace
+    eventids_input = eventid_var.get().strip()
+    if eventids_input:
+        try:
+            filter_eventids = set(int(eid) for eid in eventids_input.replace(" ", "").split(",") if eid)
+        except Exception:
+            messagebox.showerror("Invalid Event ID(s)", "Event ID filters must be integers, separated by commas.")
+            return
+    else:
+        filter_eventids = None
     tree.delete(*tree.get_children())
-    events_data, events_xml = fetch_events(selected_log, start_date, end_date)
+    events_data, events_xml = fetch_events(selected_log, start_date, end_date, filter_eventids)
     for i, row in enumerate(events_data):
         tree.insert('', 'end', iid=i, values=row)
     global event_xml_list
@@ -156,6 +167,12 @@ ttk.Label(top_frame, text="End Date:").pack(side=tk.LEFT, padx=(20,2))
 end_cal = DateEntry(top_frame, width=12, background='darkblue', foreground='white', date_pattern='dd/mm/yyyy')
 end_cal.pack(side=tk.LEFT)
 end_cal.set_date(datetime.now())
+
+# -- Event ID filter Entry --
+ttk.Label(top_frame, text="Filter Event ID(s):").pack(side=tk.LEFT, padx=(20,2))
+eventid_var = tk.StringVar()
+eventid_entry = ttk.Entry(top_frame, textvariable=eventid_var, width=20)
+eventid_entry.pack(side=tk.LEFT)
 
 load_btn = ttk.Button(top_frame, text="Load Logs", command=load_events)
 load_btn.pack(side=tk.LEFT, padx=10)
