@@ -60,7 +60,8 @@ Filter by multiple Event IDs using a simple input box!
    
    `python Windows-log-monitor.py`
 
-   <img width="1916" height="1010" alt="image" src="https://github.com/user-attachments/assets/7605a18e-202a-495a-b926-70182f539a27" />
+   <img width="1918" height="1035" alt="image" src="https://github.com/user-attachments/assets/2ba2b6a6-11c3-47a5-9287-bc8be69ed77b" />
+
 
 ## ⚡ Usage
 
@@ -85,9 +86,8 @@ Filter by multiple Event IDs using a simple input box!
      
    to view the full event XML.
 
-<img width="1898" height="1014" alt="image" src="https://github.com/user-attachments/assets/998621ec-8506-406a-af96-b2933179d7f9" />
+<img width="1920" height="1036" alt="image" src="https://github.com/user-attachments/assets/1cbda9d7-8951-4e06-8000-1f0d035f8604" />
 
-   
 ## 🧩 Customization & Extensibility
 
 - **Add More Task Categories**  
